@@ -1,0 +1,49 @@
+{
+	"name": "1 Master Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Hydration File Movement",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "2 Hydration File Movement",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false
+				}
+			},
+			{
+				"name": "Full Load - On Prem to DataLake",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Hydration File Movement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "3 Full Load - On Prem to Bronze",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-06-08T18:24:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
